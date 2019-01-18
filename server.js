@@ -1,5 +1,5 @@
 const express = require('express');
-const exphbs = require("express-handlebars");
+const exphbs = require('express-handlebars');
 
 const logger = require('morgan');
 const mongoose = require('mongoose');
@@ -21,23 +21,26 @@ app.use(express.static('public'));
 
 // set up handlebars
 app.engine(
-  "handlebars",
+  'handlebars',
   exphbs({
-      defaultLayout: "main"
-  })
+    defaultLayout: 'main',
+  }),
 );
-app.set("view engine", "handlebars");
+
+app.set('view engine', 'handlebars');
 
 // Connect to the Mongo DB
-mongoose.connect('mongodb://localhost/mongoNewsScraper', { useNewUrlParser: true });
+mongoose.connect(
+  'mongodb://localhost/mongoNewsScraper',
+  { useNewUrlParser: true },
+);
 
 // Import routes and give the server access to them.
-const htmlRoutes = require("./routes/htmlRoutes");
-const apiRoutes = require("./routes/apiRoutes");
+const htmlRoutes = require('./routes/htmlRoutes');
+const apiRoutes = require('./routes/apiRoutes');
+
 app.use('/', htmlRoutes);
 app.use('/api', apiRoutes);
-
-
 
 // Start the server
 app.listen(PORT, () => {

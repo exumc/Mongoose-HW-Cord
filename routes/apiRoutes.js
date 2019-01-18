@@ -1,6 +1,5 @@
 const express = require('express');
 
-const mongoose = require("mongoose");
 const router = express.Router();
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -10,22 +9,18 @@ const db = require('../models');
 // A GET route for scraping the echoJS website
 router.get('/scrape', (req, res) => {
   // First, we grab the body of the html with axios
-  axios.get('http://www.echojs.com/').then((response) => {
+  axios.get('https://www.dndbeyond.com/posts').then((response) => {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     const $ = cheerio.load(response.data);
 
     // Now, we grab every h2 within an article tag, and do the following:
-    $('article h2').each(function (i, element) {
+    $('article').each(function (i, element) {
       // Save an empty result object
       const result = {};
-
-      // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this)
-        .children('a')
-        .text();
-      result.link = $(this)
-        .children('a')
-        .attr('href');
+      result.link = $(this).find('meta').attr('content');
+      result.title = $(this).find('div.post-excerpt > div.post-excerpt__content > div.post-excerpt__title > a').text();
+      result.image = $(this).find('div.post-excerpt > div.post-excerpt__preview > a').attr('style');
+      console.log(result);
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
@@ -43,7 +38,6 @@ router.get('/scrape', (req, res) => {
     res.send('Scrape Complete');
   });
 });
-
 // Route for getting all Articles from the db
 router.get('/articles', (req, res) => {
   // TODO: Finish the route so it grabs all of the articles
