@@ -1,8 +1,9 @@
 const express = require('express');
-const cheerio = require('cheerio');
 
+const mongoose = require("mongoose");
 const router = express.Router();
 const axios = require('axios');
+const cheerio = require('cheerio');
 const db = require('../models');
 
 // Routes
@@ -34,7 +35,7 @@ router.get('/scrape', (req, res) => {
         })
         .catch((err) => {
           // If an error occurred, log it
-          console.log(err);
+          console.log(err.message);
         });
     });
 
