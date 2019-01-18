@@ -1,41 +1,12 @@
-var db = require("../models");
-var isAuthenticated = require("../config/middleware/isAuthenticated");
-module.exports = function(app) {
-  // Load signup page
-  app.get("/", function(req, res) {
-    return res.render("signup");
-  });
+const express = require('express');
 
-  // Load login page
-  app.get("/login", function(req, res) {
-    res.render("login");
-  });
+const router = express.Router();
 
-  // Load profile page
-  app.get("/profile", isAuthenticated, function(req, res) {
-    db.User.findOne({
-      where: {
-        id: req.user.id
-      },
-      include: [db.Example]
-    }).then(function(dbUser) {
-      res.render("profile", { user: dbUser });
-    });
-  });
+router.get('/', (req, res) => res.render('index'));
 
-  // Load example page and pass in an example by id
-  app.get("/example/:id", isAuthenticated, function(req, res) {
-    db.Example.findOne({ where: { id: req.params.id } }).then(function(
-      dbExample
-    ) {
-      res.render("example", {
-        example: dbExample
-      });
-    });
-  });
+// Render 404 page for any unmatched routes
+router.get('*', (req, res) => {
+  res.render('404');
+});
 
-  // Render 404 page for any unmatched routes
-  app.get("*", function(req, res) {
-    res.render("404");
-  });
-};
+module.exports = router;
