@@ -3,8 +3,8 @@ const exphbs = require('express-handlebars');
 
 const logger = require('morgan');
 const mongoose = require('mongoose');
-
-const PORT = 8080;
+const Handlebars = require('handlebars')
+const PORT = process.env.PORT || 8080;
 
 // Initialize Express
 const app = express();
@@ -23,17 +23,31 @@ app.use(express.static('public'));
 app.engine(
   'handlebars',
   exphbs({
-    defaultLayout: 'main',
+    defaultLayout: 'main'
   }),
 );
-
 app.set('view engine', 'handlebars');
 
-// Connect to the Mongo DB
-mongoose.connect(
-  'mongodb://localhost/mongoNewsScraper',
-  { useNewUrlParser: true },
-);
+//handlebar helper
+Handlebars.registerHelper('grouped_each', function (every, context, options) {
+  var out = "", subcontext = [], i;
+  if (context && context.length > 0) {
+    for (i = 0; i < context.length; i++) {
+      if (i > 0 && i % every === 0) {
+        out += options.fn(subcontext);
+        subcontext = [];
+      }
+      subcontext.push(context[i]);
+    }
+    out += options.fn(subcontext);
+  }
+  return out;
+});
+
+// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoNewsScraper";
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Import routes and give the server access to them.
 const htmlRoutes = require('./routes/htmlRoutes');

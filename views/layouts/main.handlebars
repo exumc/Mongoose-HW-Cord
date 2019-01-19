@@ -12,23 +12,32 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <link rel="stylesheet" href="./styles/styles.css">
-  <title>Home Page</title>
+  <title>D&D Beyond Scraper</title>
 </head>
 
 <body>
 
   <div class="container">
     <nav class="white">
-        <a href="#" class="brand-logo NYT center black-text">Logo</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down ">
-          <li><a href="sass.html" class="black-text">Sass</a></li>
-          <li><a href="badges.html" class="black-text">Components</a></li>
-          <li><a href="collapsible.html" class="black-text">JavaScript</a></li>
-        </ul>
+      <a href="#" class="brand-logo NYT center black-text">D&D Beyond News</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down ">
+        <li><a href="/" class="black-text">Home</a></li>
+        <li><a href="/articles" class="black-text">Articles</a></li>
+      </ul>
     </nav>
+    <div class="row">
+      <a class="waves-effect waves-light btn scrape">Scrape</a>
+      <a class="waves-effect waves-light btn clearScrape">Clear</a>
+
+    </div>
     {{{body}}}
   </div>
 
 </body>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script src="./js/index.js"></script>
 
 </html>

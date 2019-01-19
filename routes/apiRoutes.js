@@ -19,14 +19,16 @@ router.get('/scrape', (req, res) => {
       const result = {};
       result.link = $(this).find('meta').attr('content');
       result.title = $(this).find('div.post-excerpt > div.post-excerpt__content > div.post-excerpt__title > a').text();
+     // scrape the image
       result.image = $(this).find('div.post-excerpt > div.post-excerpt__preview > a').attr('style');
-      console.log(result);
+      // clean up the image string to remove unnecessary elements
+      result.image = result.image.slice(22);
+      result.image = result.image.split(");").shift();
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
         .then((dbArticle) => {
           // View the added result in the console
-          console.log(dbArticle);
         })
         .catch((err) => {
           // If an error occurred, log it
@@ -38,6 +40,7 @@ router.get('/scrape', (req, res) => {
     res.send('Scrape Complete');
   });
 });
+
 // Route for getting all Articles from the db
 router.get('/articles', (req, res) => {
   // TODO: Finish the route so it grabs all of the articles
@@ -65,6 +68,24 @@ router.post('/articles/:id', (req, res) => {
     .catch((err) => {
       res.json(err);
     });
+});
+
+// Clear the DB
+router.get("/deleteall", function(req, res) {
+  // Remove every note from the notes collection
+  db.Article.remove({}, function(error, response) {
+    // Log any errors to the console
+    if (error) {
+      console.log(error);
+      res.send(error);
+    }
+    else {
+      // Otherwise, send the mongojs response to the browser
+      // This will fire off the success function of the ajax request
+      console.log(response);
+      res.send(response);
+    }
+  });
 });
 
 module.exports = router;
